@@ -7,8 +7,11 @@ MAINTAINER Rob Hasselbaum <rob@hasselbaum.net>
 RUN DEBIAN_FRONTEND=noninteractive \
  apt-get update && \
  apt-get install -y openjdk-7-jre-headless tomcat7 tomcat7-user && \
- tomcat7-instance-create /tomcat7 && \
- chown -R tomcat7:tomcat7 /tomcat7
+ tomcat7-instance-create /tomcat && \
+ chown -R tomcat7:tomcat7 /tomcat
+
+# Add volumes for volatile directories that aren't usually shared with child images.
+VOLUME ["/tomcat/logs", "/tomcat/temp", "/tomcat/work"]
 
 # Expose HTTP only by default.
 EXPOSE 8080
@@ -22,4 +25,4 @@ RUN ln -s /var/lib/tomcat7/common/ /usr/share/tomcat7/common && \
 ENV JAVA_OPTS "-Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8"
 
 # Drop privileges and run Tomcat.
-CMD sudo -u tomcat7 -- /bin/bash -c "/tomcat7/bin/startup.sh && tail -F /tomcat7/logs/catalina.out"
+CMD sudo -u tomcat7 -- /bin/bash -c "/tomcat/bin/startup.sh && tail -F /tomcat/logs/catalina.out"
