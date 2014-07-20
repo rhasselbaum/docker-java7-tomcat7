@@ -3,7 +3,7 @@
 FROM ubuntu:14.04
 MAINTAINER Rob Hasselbaum <rob@hasselbaum.net>
 
-# Install Tomcat and create private CATALINA_BASE at '/tomcat7' owned by the Tomcat user.
+# Install Tomcat and create private CATALINA_BASE at '/tomcat' owned by the Tomcat user.
 RUN DEBIAN_FRONTEND=noninteractive \
  apt-get update && \
  apt-get install -y openjdk-7-jre-headless tomcat7 tomcat7-user && \
