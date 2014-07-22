@@ -22,7 +22,10 @@ RUN ln -s /var/lib/tomcat7/common/ /usr/share/tomcat7/common && \
  ln -s /var/lib/tomcat7/shared/ /usr/share/tomcat7/shared
 
 # Use IPv4 by default and UTF-8 encoding. These are almost universally useful.
-ENV JAVA_OPTS "-Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8"
+ENV JAVA_OPTS -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8
+
+# All your base...
+ENV CATALINA_BASE /tomcat
 
 # Drop privileges and run Tomcat.
-CMD sudo -u tomcat7 -- /bin/bash -c "/tomcat/bin/startup.sh && tail -F /tomcat/logs/catalina.out"
+CMD sudo -E -u tomcat7 /usr/share/tomcat7/bin/catalina.sh run
