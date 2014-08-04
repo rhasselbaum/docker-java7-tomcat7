@@ -4,11 +4,15 @@ FROM ubuntu:14.04
 MAINTAINER Rob Hasselbaum <rob@hasselbaum.net>
 
 # Install Tomcat and create private CATALINA_BASE at '/tomcat' owned by the Tomcat user.
+# Although Ubuntu creates a "tomcat7" user, we create our own (called "tcuser") so that 
+# child images are not artificially coupled to a specific Tomcat version number and
+# filesystem write access is limited to CATALINA_BASE.
 RUN DEBIAN_FRONTEND=noninteractive \
  apt-get update && \
  apt-get install -y openjdk-7-jre-headless tomcat7 tomcat7-user && \
+ useradd -d /tomcat -r -s /bin/false tcuser && \ 
  tomcat7-instance-create /tomcat && \
- chown -R tomcat7:tomcat7 /tomcat
+ chown -R tcuser:tcuser /tomcat
 
 # Add volumes for volatile directories that aren't usually shared with child images.
 VOLUME ["/tomcat/logs", "/tomcat/temp", "/tomcat/work"]
@@ -28,4 +32,5 @@ ENV JAVA_OPTS -Djava.net.preferIPv4Stack=true -Dfile.encoding=UTF-8
 ENV CATALINA_BASE /tomcat
 
 # Drop privileges and run Tomcat.
-CMD sudo -E -u tomcat7 /usr/share/tomcat7/bin/catalina.sh run
+USER tcuser
+CMD /usr/share/tomcat7/bin/catalina.sh run
