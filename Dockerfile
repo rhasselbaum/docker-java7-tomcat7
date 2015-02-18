@@ -10,7 +10,8 @@ MAINTAINER Rob Hasselbaum <rob@hasselbaum.net>
 RUN DEBIAN_FRONTEND=noninteractive \
  apt-get update && \
  apt-get install -y openjdk-7-jre-headless tomcat7 tomcat7-user && \
- useradd -d /tomcat -r -s /bin/false tcuser && \ 
+ groupadd -g 9000 tcuser && \
+ useradd -d /tomcat -r -s /bin/false -g 9000 -u 9000 tcuser && \ 
  tomcat7-instance-create /tomcat && \
  chown -R tcuser:tcuser /tomcat
 
